@@ -1,0 +1,23 @@
+{% extends "auth_base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+    <div id="loginbox">
+        <form id="loginform" class="form-vertical" method="post" action=".">
+            {% csrf_token %}
+            <div class="control-group normal_text"> <h3><img src="{% static "img/logo.png"%}" alt="Logo" /></h3></div>
+
+            <h3 style="text-align: center; color: #e2e2e2;">****을 이용해 주셔서 감사합니다.
+                <br>다시 로그인 하려면 Log In 버튼을 클릭하세요.</h3>
+
+            <br>
+            <div class="login" style="text-align: center">
+
+                <a href="{% url "login" %}" class="btn btn-success" role="button">Log In</a>
+            </div>
+
+            <div class="form-actions"></div>
+        </form>
+    </div>
+{% endblock %}
+

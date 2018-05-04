@@ -1,0 +1,37 @@
+{% extends "auth_base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+    <div id="loginbox">
+        <form id="loginform" class="form-vertical" method="post" action=".">
+            {% csrf_token %}
+            <div class="control-group normal_text"> <h3><img src="{% static "img/logo.png"%}" alt="Logo" /></h3></div>
+
+            <div class="control-group">
+                <div class="controls">
+                    <div class="main_input_box">
+                        <span class="add-on bg_lg"><i class="icon-user"> </i></span>
+                        {{ form.username }}
+                        <span class="field-error">{{ form.username.errors|striptags }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="controls">
+                    <div class="main_input_box">
+                        <span class="add-on bg_ly"><i class="icon-lock"></i></span>
+                        {{ form.password }}
+                        <span class="field-error">{{ form.password.errors|striptags }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <span class="pull-left"><a href="{% url "register" %}" class="btn btn-info" id="to-register">Registration?</a></span>
+                <span class="pull-right"><button id="signin" name="signin" class="btn btn-success" type="submit">Log In</button></span>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+

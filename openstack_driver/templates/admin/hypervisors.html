@@ -1,0 +1,326 @@
+{% extends "base.html" %}ㅑ
+{% load staticfiles %}
+
+{% block content %}
+    <!--main-container-part-->
+    <div id="content">
+        <!--breadcrumbs-->
+        <div id="content-header">
+            <div id="breadcrumb">
+                <a href="{% url "home" %}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a></div>
+            <h1>내 자원 현황</h1>
+            <!--이곳에 내용을 입력하세요-->
+        </div>
+        <div class="container-fluid">
+            <hr>
+            <div class="row-fluid">
+                <div class="span4">
+                    <div class="widget-box">
+                        <div class="widget-title"> <span class="icon"> <i class="icon-list"></i> </span>
+                            <h5>vCPU 현황</h5>
+                        </div>
+                        <div class="widget-content">
+                            <table id="cpu_table"  class="table table-bordered table-striped with-check">
+                                <thead>
+                                <tr >
+                                    <th><i class="icon-check"></i></th>
+                                    <th>Hypervisors</th>
+                                    <th>VMs</th>
+                                    <th>Total</th>
+                                    <th>Used</th>
+                                    <th>Free</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="span4">
+                    <div class="widget-box">
+                        <div class="widget-title"> <span class="icon"> <i class="icon-list"></i> </span>
+                            <h5>Memory 현황</h5>
+                        </div>
+                        <div class="widget-content">
+                            <table id="mem_table"  class="table table-bordered table-striped with-check">
+                                <thead>
+                                <tr >
+                                    <th><i class="icon-check"></i></th>
+                                    <th>Hypervisors</th>
+                                    <th>VMs</th>
+                                    <th>Total</th>
+                                    <th>Used</th>
+                                    <th>Free</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="span4">
+                    <div class="widget-box">
+                        <div class="widget-title"> <span class="icon"> <i class="icon-list"></i> </span>
+                            <h5>Storage 현황</h5>
+                        </div>
+                        <div class="widget-content">
+                            <table id="hdd_table"  class="table table-bordered table-striped with-check">
+                                <thead>
+                                <tr >
+                                    <th><i class="icon-check"></i></th>
+                                    <th>Hypervisors</th>
+                                    <th>VMs</th>
+                                    <th>Total</th>
+                                    <th>Used</th>
+                                    <th>Free</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row-fluid">
+                <div class="span4">
+                    <div class="widget-box">
+                        <div class="widget-title"> <span class="icon"> <i class="icon-dashboard"></i> </span>
+                            <h5>vCPU Chart</h5>
+                        </div>
+                        <div class="widget-content">
+                            <div id="cpu_pie_chart" style="min-width: 310px; height: 300px; max-width: 600px; margin: 0 auto"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="span4">
+                    <div class="widget-box">
+                        <div class="widget-title"> <span class="icon"> <i class="icon-dashboard"></i> </span>
+                            <h5>Memory Chart</h5>
+                        </div>
+                        <div class="widget-content">
+                            <div id="mem_pie_chart" style="min-width: 310px; height: 300px; max-width: 600px; margin: 0 auto"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="span4">
+                    <div class="widget-box">
+                        <div class="widget-title"> <span class="icon"> <i class="icon-dashboard"></i> </span>
+                            <h5>Storage Chart</h5>
+                        </div>
+                        <div class="widget-content">
+                            <div id="disk_pie_chart" style="min-width: 310px; height: 300px; max-width: 600px; margin: 0 auto"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+
+    <script src="{% static "chart/highcharts.js" %}"></script>
+    <script src="{% static "chart/exporting.js" %}"></script>
+
+    <script>
+        $("#home_tap").removeClass("active");
+        $("#admin_tap").addClass("active open");
+        $("#admin_hypervisor_tap").addClass("active open");
+
+        $.get("/openstack/rest/v1/hypervisors", function(data){
+            var total_cpu = 0;
+            var used_cpu = 0;
+            var free_cpu = 0;
+
+            var total_mem = 0;
+            var used_mem = 0;
+            var free_mem = 0;
+
+            var total_hdd = 0;
+            var used_hdd = 0;
+            var free_hdd = 0;
+
+            for (var i=0; i < data.hypervisors.length; i++) {
+                total_cpu += data.hypervisors[i].total_cpu;
+                used_cpu += data.hypervisors[i].used_cpu;
+                free_cpu += data.hypervisors[i].free_cpu;
+
+                total_mem += data.hypervisors[i].total_ram_mb;
+                used_mem += data.hypervisors[i].used_ram_mb;
+                free_mem += data.hypervisors[i].free_ram_mb;
+
+                total_hdd += data.hypervisors[i].total_disk_gb;
+                used_hdd+= data.hypervisors[i].used_disk_gb;
+                free_hdd += data.hypervisors[i].free_disk_gb;
+
+                $('#cpu_table').append("" +
+                    "<tr name=" + data.hypervisors[i].host_name + ">" +
+                    "<td><input type='checkbox' value='checked'/></td>" +
+                    "<td>" + data.hypervisors[i].host_name + "</td>" +
+                    "<td>" + data.hypervisors[i].running_vms + "</td>" +
+                    "<td>" + data.hypervisors[i].total_cpu + "</td>" +
+                    "<td>" + data.hypervisors[i].used_cpu + "</td>" +
+                    "<td>" + data.hypervisors[i].free_cpu + "</td>" +
+                    "</tr>"
+                );
+
+                $('#mem_table').append("" +
+                    "<tr name=" + data.hypervisors[i].host_name + ">" +
+                    "<td><input type='checkbox' value='checked'/></td>" +
+                    "<td>" + data.hypervisors[i].host_name + "</td>" +
+                    "<td>" + data.hypervisors[i].running_vms + "</td>" +
+                    "<td>" + (data.hypervisors[i].total_ram_mb/1024).toFixed(2)+" GB"+"</td>" +
+                    "<td>" + (data.hypervisors[i].used_ram_mb/1024).toFixed(2)+" GB"+"</td>" +
+                    "<td>" + (data.hypervisors[i].free_ram_mb/1024).toFixed(2)+" GB"+"</td>" +
+                    "</tr>"
+                );
+
+                $('#hdd_table').append("" +
+                    "<tr name=" + data.hypervisors[i].host_name + ">" +
+                    "<td><input type='checkbox' value='checked'/></td>" +
+                    "<td>" + data.hypervisors[i].host_name + "</td>" +
+                    "<td>" + data.hypervisors[i].running_vms + "</td>" +
+                    "<td>" + data.hypervisors[i].total_disk_gb +" GB"+ "</td>" +
+                    "<td>" + data.hypervisors[i].used_disk_gb +" GB"+ "</td>" +
+                    "<td>" + data.hypervisors[i].free_disk_gb +" GB"+ "</td>" +
+                    "</tr>"
+                );
+            }
+
+            Highcharts.chart('cpu_pie_chart', {
+                chart: {
+                    plotBackgroundColor: '#f9f9f9',
+                    plotBorderWidth: 0,
+                    plotShadow: false
+                },
+                title: {
+                    text: '<br>Total vCPUs<br>'+total_cpu,
+                    align: 'center',
+                    verticalAlign: 'middle',
+                    y: 37
+                },
+                plotOptions: {
+                    pie: {
+                        dataLabels: {
+                            enabled: true,
+                            distance: -30,
+                            style: {
+                                fontWeight: '',
+                                color: 'white'
+                            }
+                        },
+                        startAngle: -90,
+                        endAngle: 90,
+                        center: ['50%', '75%']
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    name: 'Volumes',
+                    innerSize: '52%',
+                    data: [
+                        ['Used vCPUs', used_cpu],
+                        ['Free vCPUs', free_cpu]
+                    ]
+                }]
+
+            });
+
+            Highcharts.chart('mem_pie_chart', {
+                chart: {
+                    plotBackgroundColor: '#f9f9f9',
+                    plotBorderWidth: 0,
+                    plotShadow: false
+                },
+                title: {
+                    text: '<br>Total RAM<br>'+(total_mem/1024).toFixed(2)+' GB',
+                    align: 'center',
+                    verticalAlign: 'middle',
+                    y: 37
+                },
+                plotOptions: {
+                    pie: {
+                        dataLabels: {
+                            enabled: true,
+                            distance: -30,
+                            style: {
+                                fontWeight: '',
+                                color: 'white'
+                            }
+                        },
+                        startAngle: -90,
+                        endAngle: 90,
+                        center: ['50%', '75%']
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    name: 'Volumes',
+                    innerSize: '52%',
+                    data: [
+                        ['Used Mem', used_mem],
+                        ['Free Mem', free_mem]
+                    ]
+                }]
+            });
+
+            Highcharts.chart('disk_pie_chart', {
+                chart: {
+                    plotBackgroundColor: '#f9f9f9',
+                    plotBorderWidth: 0,
+                    plotShadow: false
+                },
+                title: {
+                    text: '<br>Total HDD<br>'+total_hdd+' GB',
+                    align: 'center',
+                    verticalAlign: 'middle',
+                    y: 37
+                },
+                plotOptions: {
+                    pie: {
+                        dataLabels: {
+                            enabled: true,
+                            distance: -30,
+                            style: {
+                                fontWeight: '',
+                                color: 'white'
+                            }
+                        },
+                        startAngle: -90,
+                        endAngle: 90,
+                        center: ['50%', '75%']
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    name: 'Volumes',
+                    innerSize: '52%',
+                    data: [
+                        ['Used Disk', used_hdd],
+                        ['Free Disk', free_hdd]
+                    ]
+                }]
+            });
+
+
+            $("rect.highcharts-background").attr('fill','#f9f9f9');
+            $("rect.highcharts-button-box").attr('fill','#f9f9f9');
+        });
+    </script>
+{% endblock %}

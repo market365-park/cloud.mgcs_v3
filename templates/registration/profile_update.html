@@ -1,0 +1,71 @@
+{% extends "base.html" %}ㅑ
+{% load staticfiles %}
+
+{% block content %}
+    <!--main-container-part-->
+    <div id="content">
+        <!--breadcrumbs-->
+        <div id="content-header">
+            <div id="breadcrumb"> <a href="{% url "home" %}" title="Go to Home" class="tip-bottom">
+                <i class="icon-home"></i> Home</a> <a href="/account/profile/{{ user.pk }}/edit/" class="current">Modify Profile</a></div>
+            <h1>나의 프로파일</h1>
+            <!--이곳에 내용을 입력하세요-->
+        </div>
+        <div class="container-fluid">
+            <hr>
+            <div class="row-fluid">
+                <div class="span7">
+                    <div class="widget-box">
+                        <div class="widget-title"> <span class="icon"> <i class="icon-user"></i> </span>
+                            <h5>프로파일을 변경할 수 있습니다.</h5>
+                        </div>
+                        <div class="widget-content nopadding">
+
+                            <form id="loginform" class="form-horizontal" method="post" action=".">
+                                {% csrf_token %}
+
+                                <div class="control-group">
+                                    <label class="control-label">Login ID :</label>
+                                    <div class="controls">
+                                        {{ form.username }}<br>
+                                        <span class="field-error">{{ form.username.errors|striptags }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">Username :</label>
+                                    <div class="controls">
+                                        {{ form.first_name }}<br>
+                                        <span class="field-error">{{ form.first_name.errors|striptags }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">E-mail :</label>
+                                    <div class="controls">
+                                        {{ form.email }}<br>
+                                        <span class="field-error">{{ form.email.errors|striptags }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">First Name :</label>
+                                    <div class="controls">
+                                        {{ form.phone }}<br>
+                                        <span class="field-error">{{ form.phone.errors|striptags }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions">
+                                    <span class="pull-left"><button id="signin" name="signin" class="btn btn-success" type="submit">Change</button></span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--내용 입력 종료-->
+        </div>
+        <!--End-breadcrumbs-->
+    </div>
+{% endblock content %}

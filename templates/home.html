@@ -1,0 +1,286 @@
+{% extends "base.html" %}ㅑ
+{% load staticfiles %}
+
+{% block content %}
+    <!--main-container-part-->
+    <div id="content">
+        <!--breadcrumbs-->
+        <div id="content-header">
+            <div id="breadcrumb">
+                <a href="{% url "home" %}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a></div>
+            <h1>내 자원 현황</h1>
+            <!--이곳에 내용을 입력하세요-->
+        </div>
+        <div class="container-fluid">
+            <hr>
+            <div class="row-fluid">
+                <div class="span3">
+                    <div class="widget-box">
+                        <div class="widget-title"> <span class="icon"> <i class="icon-list"></i> </span>
+                            <h5>Instances</h5>
+                        </div>
+                        <div class="widget-content">
+                            <div id="instance_chart" style="min-width: 200px; height: 200px; max-width: 600px; margin: 0 auto"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="span3">
+                    <div class="widget-box">
+                        <div class="widget-title"> <span class="icon"> <i class="icon-list"></i> </span>
+                            <h5>vCPUs</h5>
+                        </div>
+                        <div class="widget-content">
+                            <div id="cpu_chart" style="min-width: 200px; height: 200px; max-width: 600px; margin: 0 auto"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="span3">
+                    <div class="widget-box">
+                        <div class="widget-title"> <span class="icon"> <i class="icon-list"></i> </span>
+                            <h5>RAM</h5>
+                        </div>
+                        <div class="widget-content">
+                            <div id="ram_chart" style="min-width: 200px; height: 200px; max-width: 600px; margin: 0 auto"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="span3">
+                    <div class="widget-box">
+                        <div class="widget-title"> <span class="icon"> <i class="icon-list"></i> </span>
+                            <h5>Floating IP</h5>
+                        </div>
+                        <div class="widget-content">
+                            <div id="f_ip_chart" style="min-width: 200px; height: 200px; max-width: 600px; margin: 0 auto"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="widget-box">
+                <div class="widget-title"> <span class="icon"> <i class="icon-th"></i> </span>
+                    <h5>내 인스턴스</h5>
+                </div>
+                <div class="widget-content">
+                    <table id="instance_table"  class="table table-bordered table-striped with-check">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>인스턴스 이름</th>
+                            <th>이미지 이름</th>
+                            <th>vCPUs</th>
+                            <th>RAM</th>
+                            <th>Disk</th>
+                            <th>전원상태</th>
+                            <th>생성시간</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+
+    <script src="{% static "chart/highcharts.js" %}"></script>
+    <script src="{% static "chart/exporting.js" %}"></script>
+
+    <script>
+        $.get("/openstack/rest/resources", function(data){
+            var total_vm = data.resources.maxTotalInstances;
+            var used_vm = data.resources.totalInstancesUsed;
+            var free_vm = total_vm - used_vm;
+
+            var total_cpu = data.resources.maxTotalCores;
+            var used_cpu = data.resources.totalCoresUsed;
+            var free_cpu = total_cpu - used_cpu;
+
+            var total_ram = data.resources.maxTotalRAMSize;
+            var used_ram = data.resources.totalRAMUsed;
+            var free_ram = total_ram - used_ram;
+
+            var total_f_ip = data.resources.maxTotalFloatingIps;
+            var used_f_ip = data.resources.totalFloatingIpsUsed;
+            var free_f_ip = total_f_ip - used_f_ip;
+
+            Highcharts.chart('instance_chart', {
+                chart: {
+                    plotBackgroundColor: '#f9f9f9',
+                    plotBorderWidth: 0,
+                    plotShadow: false
+                },
+                title: {
+                    text: total_vm+'개 에서 '+used_vm+'개 사용됨, '+free_vm+'개 남음',
+                    align: 'center',
+                    verticalAlign: 'middle',
+                    style: {
+                        fontSize: '13px'
+                    },
+                    y: 100
+                },
+                plotOptions: {
+                    pie: {
+                        dataLabels: {
+                            enabled: true,
+                            distance: -34,
+                            style: {
+                                fontWeight: '',
+                                color: 'white'
+                            }
+                        },
+                        center: ['50%', '50%']
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    name: 'Volumes',
+                    data: [
+                        ['Free VMs', free_vm],
+                        ['Used VMs', used_vm]
+                    ]
+                }]
+            });
+
+            Highcharts.chart('cpu_chart', {
+                chart: {
+                    plotBackgroundColor: '#f9f9f9',
+                    plotBorderWidth: 0,
+                    plotShadow: false
+                },
+                title: {
+                    text: total_cpu+'개 에서 '+used_cpu+'개 사용됨, '+free_cpu+'개 남음',
+                    align: 'center',
+                    verticalAlign: 'middle',
+                    style: {
+                        fontSize: '13px'
+                    },
+                    y: 100
+                },
+                plotOptions: {
+                    pie: {
+                        dataLabels: {
+                            enabled: true,
+                            distance: -34,
+                            style: {
+                                fontWeight: '',
+                                color: 'white'
+                            }
+                        },
+                        center: ['50%', '50%']
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    name: 'Volumes',
+                    data: [
+                        ['Free vCPUs', free_cpu],
+                        ['Used vCPUs', used_cpu]
+                    ]
+                }]
+            });
+
+            Highcharts.chart('ram_chart', {
+                chart: {
+                    plotBackgroundColor: '#f9f9f9',
+                    plotBorderWidth: 0,
+                    plotShadow: false
+                },
+                title: {
+                    text: (total_ram/1024).toFixed(0)+'GB 에서 '+(used_ram/1024).toFixed(0)+'GB 사용됨, '+(free_ram/1024).toFixed(0)+'GB 남음',
+                    align: 'center',
+                    verticalAlign: 'middle',
+                    style: {
+                        fontSize: '13px'
+                    },
+                    y: 100
+                },
+                plotOptions: {
+                    pie: {
+                        dataLabels: {
+                            enabled: true,
+                            distance: -34,
+                            style: {
+                                fontWeight: '',
+                                color: 'white'
+                            }
+                        },
+                        center: ['50%', '50%']
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    name: 'Volumes',
+                    data: [
+                        ['Free RAM', free_ram],
+                        ['Used RAM', used_ram]
+                    ]
+                }]
+            });
+
+            Highcharts.chart('f_ip_chart', {
+                chart: {
+                    plotBackgroundColor: '#f9f9f9',
+                    plotBorderWidth: 0,
+                    plotShadow: false
+                },
+                title: {
+                    text: total_f_ip+'개 에서 '+used_f_ip+'개 사용됨, '+free_f_ip+'개 남음',
+                    align: 'center',
+                    verticalAlign: 'middle',
+                    style: {
+                        fontSize: '13px'
+                    },
+                    y: 100
+                },
+                plotOptions: {
+                    pie: {
+                        dataLabels: {
+                            enabled: true,
+                            distance: -34,
+                            style: {
+                                fontWeight: '',
+                                color: 'white'
+                            }
+                        },
+                        center: ['50%', '50%']
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    name: 'Volumes',
+                    data: [
+                        ['Free Floating IP', free_f_ip],
+                        ['Used Floating IP', used_f_ip]
+                    ]
+                }]
+            });
+
+            $("rect.highcharts-background").attr('fill','#f9f9f9');
+            $("rect.highcharts-button-box").attr('fill','#f9f9f9');
+
+            $.get("/openstack/rest/server_detail", function(data) {
+                for (var i = 0; i < data.server_details.length; i++) {
+                    $('#instance_table').append(
+                        "<tr>" +
+                        "<td>" + Number(i+1) + "</td>" +
+                        "<td>" + data.server_details[i].name + "</td>" +
+                        "<td>" + data.server_details[i].image + "</td>" +
+                        "<td>" + data.server_details[i].flavor_cpu + "</td>" +
+                        "<td>" + (data.server_details[i].flavor_ram/1024).toFixed(0) + " GB" + "</td>" +
+                        "<td>" + data.server_details[i].flavor_disk + " GB" + "</td>" +
+                        "<td>" + data.server_details[i].power + "</td>" +
+                        "<td>" + data.server_details[i].created + "</td>" +
+                        "</tr>"
+                    )
+                }
+            });
+        });
+    </script>
+{% endblock %}

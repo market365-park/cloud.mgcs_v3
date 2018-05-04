@@ -1,0 +1,73 @@
+{% extends "base.html" %}ㅑ
+{% load staticfiles %}
+
+{% block content %}
+    <!--main-container-part-->
+    <div id="content">
+        <!--breadcrumbs-->
+        <div id="content-header">
+            <div id="breadcrumb">
+                <a href="{% url "home" %}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a>
+                <a href="#"> Compute</a>
+                <a href="{% url "openstack:image" %}" class="current">Image List</a></div>
+            <h1>Image List</h1>
+            <!--이곳에 내용을 입력하세요-->
+        </div>
+        <div class="container-fluid">
+            <hr>
+            <div class="widget-box">
+                <div class="widget-title"> <span class="icon"> <i class="icon-camera"></i> </span>
+                    <h5>사용 가능한 이미지를 확인해 보세요</h5>
+                </div>
+                <div class="widget-content">
+                    <div class="btn-group pull-right" style="margin-bottom: 10px;">
+                        <button class="btn btn-danger">이미지 삭제</button>
+                    </div>
+                    <div class="controls">
+                        <table id="image_table" class="table table-bordered table-striped with-check" >
+                            <thead>
+                            <tr>
+                                <th><i class="icon-camera"></i></th>
+                                <th>Image Name</th>
+                                <th>Size</th>
+                                <th>Status</th>
+                                <th>Format</th>
+                                <th>ID</th>
+                                <th>생성일시</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+    <script>
+        $("#home_tap").removeClass("active");
+        $("#compute_tap").addClass("active open");
+        $("#image_tap").addClass("active open");
+
+        $.get("/openstack/rest/v2/images", function(data){
+            for (var i=0; i < data.images.length; i++) {
+                $('#image_table').append(
+                    "<tr>" +
+                    "<td><input type='checkbox' name='image_check' value='"+data.images[i].name+"'"+" /></td>" +
+                    "<td>"+data.images[i].name+"</td>" +
+                    "<td>"+(data.images[i].size/(1024*1024*1024)).toFixed(2)+" GB"+"</td>" +
+                    "<td>"+data.images[i].status+"</td>" +
+                    "<td>"+data.images[i].disk_format+"</td>" +
+                    "<td>"+data.images[i].id+"</td>" +
+                    "<td>"+data.images[i].created_at+"</td>" +
+                    "</tr>"
+                );
+            }
+        });
+
+    </script>
+{% endblock %}

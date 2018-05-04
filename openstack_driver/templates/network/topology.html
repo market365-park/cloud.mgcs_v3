@@ -1,0 +1,39 @@
+{% extends "base.html" %}ㅑ
+{% load staticfiles %}
+
+{% block content %}
+    <!--main-container-part-->
+    <div id="content">
+        <!--breadcrumbs-->
+        <div id="content-header">
+            <div id="breadcrumb">
+                <a href="{% url "home" %}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a>
+                <a href="#"> Network</a>
+                <a href="{% url "openstack:topology" %}" class="current">Topology</a></div>
+            <h1>Network Topology</h1>
+            <!--이곳에 내용을 입력하세요-->
+        </div>
+        <div class="container-fluid">
+            <hr>
+            <div class="widget-box">
+                <div class="widget-title"> <span class="icon"> <i class="icon-globe"></i> </span>
+                    <h5>네트워크 토폴로지를 확인해 보세요.</h5>
+                </div>
+                <div class="widget-content">
+
+                    <div class="controls">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+    <script>
+        $("#home_tap").removeClass("active");
+        $("#network_tap").addClass("active open");
+        $("#topology_tap").addClass("active open");
+    </script>
+{% endblock %}

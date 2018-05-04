@@ -1,0 +1,80 @@
+{% extends "base.html" %}ㅑ
+{% load staticfiles %}
+
+{% block content %}
+    <!--main-container-part-->
+    <div id="content">
+        <!--breadcrumbs-->
+        <div id="content-header">
+            <div id="breadcrumb">
+                <a href="{% url "home" %}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a>
+                <a href="#"> Virtual Resources</a>
+                <a href="{% url "openstack:network" %}" class="current">Network List</a></div>
+            <h1>Network List</h1>
+            <!--이곳에 내용을 입력하세요-->
+        </div>
+        <div class="container-fluid">
+            <hr>
+            <div class="widget-box">
+                <div class="widget-title"> <span class="icon"> <i class="icon-sitemap"></i> </span>
+                    <h5>사용 가능한 네트워크를 확인해 보세요</h5>
+                </div>
+                <div class="widget-content">
+
+                    <div class="controls">
+                        <div class="btn-group pull-right" style="margin-bottom: 10px;">
+                            <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle">Action <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">인스턴스 재시작</a></li>
+                                <li><a href="#">인스턴스 시작</a></li>
+                                <li><a href="#">인스턴스 종료</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">인스턴스 삭제</a></li>
+                            </ul>
+                        </div>
+
+                        <table id="network_table" class="table table-bordered table-striped with-check">
+                            <thead>
+                            <tr>
+                                <th><i class="icon-sitemap"></i></th>
+                                <th>네트워크 이름</th>
+                                <th>공유여부</th>
+                                <th>상태</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+    <script>
+        $("#home_tap").removeClass("active");
+        $("#network_tap").addClass("active open");
+        $("#network_detail_tap").addClass("active open");
+
+        $.get("/openstack/rest/v2/networks", function(data){
+            for (var i=0; i < data.networks.length; i++) {
+                var ischecked = "checked";
+                if (i != 0) {
+                    ischecked = "";
+                }
+                $('#network_table').append(
+                    "<tr>" +
+                    "<td><input type='checkbox' id='network_check' name='network_check' value='"+data.networks[i].name+"'"+ischecked+" /></td>" +
+                    "<td>"+data.networks[i].name+"</td>" +
+                    "<td>"+data.networks[i].shared+"</td>" +
+                    "<td>"+data.networks[i].status+"</td>" +
+                    "</tr>"
+                );
+            }
+        });
+
+    </script>
+{% endblock %}

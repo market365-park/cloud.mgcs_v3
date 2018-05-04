@@ -1,0 +1,391 @@
+{% extends "base.html" %}ㅑ
+{% load staticfiles %}
+
+{% block content %}
+    <!--main-container-part-->
+    <div id="content">
+        <!--breadcrumbs-->
+        <div id="content-header">
+            <div id="breadcrumb">
+                <a href="{% url "home" %}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a>
+                <a href="#"> Compute</a>
+                <a href="{% url "openstack:make_instance" %}" class="current">Launch Instance</a></div>
+            <h1>Launch Instance</h1>
+            <!--이곳에 내용을 입력하세요-->
+        </div>
+        <div class="container-fluid">
+            <hr>
+            <div class="row-fluid">
+                <div class="span7">
+                    <div class="widget-box">
+                        <div class="widget-title"> <span class="icon"> <i class="icon-magic"></i> </span>
+                            <h5>인스턴스를 생성해 보세요</h5>
+                        </div>
+                        <div class="widget-content">
+                            <div class="progress progress-striped active">
+                                <div class="bar progress-bar-success" role="progressbar" style="width: 20%;"></div>
+                            </div>
+
+                            <div class="navbar">
+                                <div class="navbar-inner">
+                                    <ul class="nav nav-pills">
+                                        <li class="active">
+                                            <a href="#step1" data-toggle="tab" data-step="1" id="vm_step1">세부 정보</a></li>
+                                        <li><a href="#step2" data-toggle="tab" data-step="2" id="vm_step2">소스</a></li>
+                                        <li><a href="#step3" data-toggle="tab" data-step="3" id="vm_step3">Flavor</a></li>
+                                        <li><a href="#step4" data-toggle="tab" data-step="4" id="vm_step4">네트워크</a></li>
+                                        <li><a href="#step5" data-toggle="tab" data-step="5" id="vm_step5">입력 확인</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="tab-content">
+
+                                <!---------------------step1------------------->
+                                <div class="tab-pane fade in active" id="step1">
+                                    <div class="well">
+                                        <h2>Step 1</h2>인스턴스 생성이 필요한 상세 내용을 입력하세요.<hr>
+
+                                        <form action="#" method="get" class="form-horizontal">
+                                            <div class="control-group">
+                                                <label class="control-label">인스턴스 이름 :</label>
+                                                <div class="controls">
+                                                    <input id="hostname" type="text" class="span12" placeholder="호스트 이름을 입력하세요." required/>
+                                                </div>
+                                            </div>
+                                            <div class="control-group">
+                                                <label class="control-label">가용 구역 :</label>
+                                                <div class="controls">
+                                                    <select class="span12" id="zone_option">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="control-group">
+                                                <label class="control-label">갯수 :</label>
+                                                <div class="controls">
+                                                    <select class="span12" id="count_option">
+                                                        <option>1</option>
+                                                        <option>2</option>
+                                                        <option>3</option>
+                                                        <option>4</option>
+                                                        <option>5</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <a class="btn btn-primary btn-lg next" href="#">Continue</a>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!---------------------step2------------------->
+
+                                <div class="tab-pane fade" id="step2">
+                                    <div class="well">
+                                        <h2>Step 2</h2>인스턴스 생성에 사용할 이미지 또는 스냅샷을 선택하세요.<hr>
+                                        <div class="widget-content tab-content">
+                                            <div id="tab1" class="tab-pane active">
+                                                <div class="controls">
+                                                    <table id="image_table" class="table table-bordered table-striped with-check" >
+                                                        <thead>
+                                                        <tr>
+                                                            <th><i class="icon-camera"></i></th>
+                                                            <th>Image Name</th>
+                                                            <th>Size</th>
+                                                            <th>Min Disk</th>
+                                                            <th>Status</th>
+                                                        </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a class="btn btn-primary next" href="#">Continue</a>
+                                </div>
+
+                                <!---------------------step3------------------->
+
+                                <div class="tab-pane fade" id="step3">
+                                    <div class="well">
+                                        <h2>Step 3</h2>알맞은 스펙의 Flavor를 선택하세요.<hr>
+                                        <div class="widget-content tab-content">
+                                            <div id="tab1" class="tab-pane active">
+                                                <div class="controls">
+                                                    <table id="flavor_table" class="table table-bordered table-striped with-check">
+                                                        <thead>
+                                                        <tr>
+                                                            <th><i class="icon-hdd"></i></th>
+                                                            <th>Name</th>
+                                                            <th>vCPUs</th>
+                                                            <th>RAM</th>
+                                                            <th>Disk</th>
+                                                        </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a class="btn btn-primary next" href="#">Continue</a>
+                                </div>
+
+                                <!---------------------step4------------------->
+
+                                <div class="tab-pane fade" id="step4">
+                                    <div class="well">
+                                        <h2>Step 4</h2>연결할 네트워크 인터페이스를 선택하세요.(복수 가능)<hr>
+                                        <div class="widget-content tab-content">
+                                            <div id="tab1" class="tab-pane active">
+                                                <div class="controls">
+                                                    <table id="network_table" class="table table-bordered table-striped with-check">
+                                                        <thead>
+                                                        <tr>
+                                                            <th><i class="icon-sitemap"></i></th>
+                                                            <th>네트워크 이름</th>
+                                                            <th>공유여부</th>
+                                                            <th>상태</th>
+                                                        </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a id="last_continue" class="btn btn-primary next" href="#">Continue</a>
+                                </div>
+
+                                <!---------------------step1------------------->
+
+                                <div class="tab-pane fade" id="step5">
+                                    <div class="well">
+                                        <h2>Step 5</h2>선택한 VM 스펙을 확인 하세요.
+                                        <div class="widget-content tab-content">
+                                            <div id="tab1" class="tab-pane active">
+                                                <div class="controls">
+                                                    <table id="final_table" class="table table-bordered table-striped with-check">
+                                                        <thead>
+                                                        <tr>
+                                                            <th><i class="icon-check"></i></th>
+                                                            <th>구분</th>
+                                                            <th>선택 사양</th>
+                                                        </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a id="create_heat" class="btn btn-success first" href="#">Create VM</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--내용 입력 종료-->
+                </div>
+                <!--End-breadcrumbs-->
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+    <script>
+        $("#home_tap").removeClass("active");
+        $("#compute_tap").addClass("active open");
+        $("#make_instance_tap").addClass("active open");
+
+        $('.next').click(function(){
+            var nextId = $(this).parents('.tab-pane').next().attr("id");
+            $('[href=#'+nextId+']').tab('show');
+            return false;
+        });
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            //update progress
+            var step = $(e.target).data('step');
+            var percent = (parseInt(step) / 5) * 100;
+
+            $('.bar').css({width: percent + '%'});
+            //e.relatedTarget // previous tab
+        });
+
+        $.get("/openstack/rest/zones", function(data){
+            for (var i=0; i < data.zones.length; i++) {
+                var is_selected = "selected";
+                if (i != 0) {
+                    is_selected = "";
+                }
+                $('#zone_option').append(
+                    "<option "+is_selected+">"+data.zones[i].name+"</option>"
+                );
+            }
+        });
+
+        $.get("/openstack/rest/v2/images", function(data){
+            for (var i=0; i < data.images.length; i++) {
+                var ischecked = "checked";
+                if (i != 0) {
+                    ischecked = "";
+                }
+                $('#image_table').append(
+                    "<tr>" +
+                    "<td><input type='radio' name='image_radio' value='"+data.images[i].name+"'"+ischecked+" /></td>" +
+                    "<td>"+data.images[i].name+"</td>" +
+                    "<td>"+(data.images[i].size/(1024*1024*1024)).toFixed(2)+" GB"+"</td>" +
+                    "<td>"+data.images[i].min_disk+" GB"+"</td>" +
+                    "<td>"+data.images[i].status+"</td>" +
+                    "</tr>"
+                );
+            }
+        });
+
+        $.get("/openstack/rest/flavors/detail", function(data){
+            for (var i=0; i < data.flavors.length; i++) {
+                var ischecked = "checked";
+                if (i != 0) {
+                    ischecked = "";
+                }
+                $('#flavor_table').append(
+                    "<tr>" +
+                    "<td><input type='radio' name='flavor_radio' value='"+data.flavors[i].name+"'"+ischecked+" /></td>" +
+                    "<td>"+data.flavors[i].name+"</td>" +
+                    "<td>"+data.flavors[i].vcpus+"</td>" +
+                    "<td>"+data.flavors[i].ram+" MB"+ "</td>" +
+                    "<td>"+data.flavors[i].disk+" GB"+ "</td>" +
+                    "</tr>"
+                );
+            }
+        });
+
+        $.get("/openstack/rest/v2/networks", function(data){
+            for (var i=0; i < data.networks.length; i++) {
+                var ischecked = "checked";
+                if (i != 0) {
+                    ischecked = "";
+                }
+                $('#network_table').append(
+                    "<tr>" +
+                    "<td><input type='checkbox' id='network_check' name='network_check' value='"+data.networks[i].name+"'"+ischecked+" /></td>" +
+                    "<td>"+data.networks[i].name+"</td>" +
+                    "<td>"+data.networks[i].shared+"</td>" +
+                    "<td>"+data.networks[i].status+"</td>" +
+                    "</tr>"
+                );
+            }
+        });
+
+        function getHostname() {
+            return $('#hostname').val();
+        }
+
+        function getZone() {
+            return $('#zone_option').val();
+        }
+
+        function getCount() {
+            return $('#count_option').val();
+        }
+
+        function getImage() {
+            return $("input[type=radio][name=image_radio]:checked").val();
+        }
+
+        function getFlavor() {
+            return $("input[type=radio][name=flavor_radio]:checked").val();
+        }
+
+        function getNetwork() {
+            var selected_networks = [];
+            $("#network_check:checked").each(function () {
+                selected_networks.push($(this).val());
+            });
+            return selected_networks
+        }
+
+        $("#vm_step1, #vm_step2, #vm_step3, #vm_step4").click(function () {
+            $('#final_table tbody').remove();
+        });
+
+        $("#last_continue, #vm_step5").click(function () {
+            $('#final_table').append(
+                "<tr>"+
+                "<td>1</td>" +
+                "<td>인스턴스 이름</td>" +
+                "<td>"+getHostname()+"</td>"+
+                "</tr>"+
+
+                "<tr>"+
+                "<td>2</td>" +
+                "<td>가용 존</td>" +
+                "<td>"+getZone()+"</td>"+
+                "</tr>"+
+
+                "<tr>"+
+                "<td>3</td>" +
+                "<td>생성 인스턴수 갯수</td>" +
+                "<td>"+getCount()+"</td>" +
+                "</tr>"+
+
+                "<tr>"+
+                "<td>4</td>" +
+                "<td>이미지/스냅샷</td>" +
+                "<td>"+getImage()+"</td>" +
+                "</tr>"+
+
+                "<tr>"+
+                "<td>5</td>" +
+                "<td>스펙</td>" +
+                "<td>"+getFlavor()+"</td>" +
+                "</tr>"+
+
+                "<tr>"+
+                "<td>6</td>" +
+                "<td>네트워크</td>" +
+                "<td>"+getNetwork()+"</td>" +
+                "</tr>"
+            );
+        });
+
+        $("#create_heat").click(function () {
+            if ($("#hostname").val()==""){
+                alert("인스턴스 이름을 입력하세요.")
+            }
+            else {
+                var csrftoken = '{{csrf_token}}';
+                $.ajaxSetup({
+                    beforeSend: function(xhr, settings) {
+                        if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken)
+                        }
+                    }
+                });
+
+                var data = {
+                    'owner':'{{user.username}}',
+                    'name':getHostname(),
+                    'image':getImage(),
+                    'flavor':getFlavor(),
+                    'zone':getZone(),
+                    'count':getCount(),
+                    'network':getNetwork()
+                };
+
+                $.post("/openstack/rest/servers/", data, function(result){
+                    location.replace("/openstack/main")
+                });
+            }
+        });
+    </script>
+{% endblock %}

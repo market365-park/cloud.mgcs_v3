@@ -1,0 +1,343 @@
+{% extends "base.html" %}ㅑ
+{% load staticfiles %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static "css/datepicker.css" %}" />
+    <link rel="stylesheet" href="{% static "css/select2.css" %}" />
+    <link rel="stylesheet" href="{% static "css/uniform.css" %}" />
+{% endblock %}
+
+{% block content %}
+    <!--main-container-part-->
+    <div id="content">
+        <!--breadcrumbs-->
+        <div id="content-header">
+            <div id="breadcrumb">
+                <a href="{% url "home" %}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a>
+                <a href="{% url "openstack:metering" %}" class="current">Metering</a></div>
+            <h1>Metering</h1>
+            <!--이곳에 내용을 입력하세요-->
+        </div>
+        <div class="container-fluid">
+            <hr>
+            <div class="row-fluid">
+                <div class="span7">
+                    <div class="widget-box">
+                        <div class="widget-title"> <span class="icon"> <i class="icon-magic"></i> </span>
+                            <h5>내 자원 사용량을 조회해 보세요</h5>
+                        </div>
+                        <div class="widget-content">
+                            <div class="navbar">
+                                <div class="navbar-inner">
+                                    <ul class="nav nav-pills">
+                                        <li class="li_step1 active">
+                                            <a href="#step1" data-toggle="tab" data-step="1" id="meter_step1">조회기간 입력</a></li>
+                                        <li class="li_step2"><a href="#step2" data-toggle="tab" data-step="2" id="meter_step2">과금량</a></li>
+                                        <li class="li_step3"><a href="#step3" data-toggle="tab" data-step="3" id="meter_step3">사용량 상세</a></li>
+                                        <li class="li_step4"><a href="#step4" data-toggle="tab" data-step="4" id="meter_step4">그래프</a></li>
+                                        <li class="li_step5"><a href="#step5" data-toggle="tab" data-step="5" id="meter_step5">입력 확인</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="tab-content">
+                                <!---------------------step1------------------->
+                                <div class="tab-pane fade in active" id="step1">
+                                    <div class="well">
+
+                                        <h2>Step 1</h2>과금량 조회를 위해 날짜를 선택해 주세요.<hr>
+
+                                        <span style="font-size: 18px; font-weight: bold">from</span>
+                                        <div class="input-append date datepicker">
+                                            <input id="date_start" type="text" value="Pick the Start date" data-date-format="yyyy-mm-dd" class="span10">
+                                            <span class="add-on"><i class="icon-calendar"></i></span>
+                                        </div>
+                                        <span style="font-size: 18px; font-weight: bold">to</span>
+                                        <div class="input-append date datepicker">
+                                            <input id="date_end" type="text" value="Pick the End date" data-date-format="yyyy-mm-dd" class="span10">
+                                            <span class="add-on"><i class="icon-calendar"></i></span>
+                                        </div>
+
+                                    </div>
+                                    <a id="date_input" class="btn btn-primary next" href="#">조회하기</a>
+                                </div>
+
+                                <!---------------------step2------------------->
+
+                                <div class="tab-pane fade" id="step2">
+                                    <div class="well">
+                                        <h2>Step 2</h2><p id="meter_duration"></p><hr>
+                                        <div class="tab-content">
+                                            <table id="metering_table"  class="table table-bordered table-striped with-check">
+                                                <thead>
+                                                <tr>
+                                                    <th><i class="icon-check"></i></th>
+                                                    <th>인스턴스 이름</th>
+                                                    <th>Flavor</th>
+                                                    <th>vCPUs</th>
+                                                    <th>RAM</th>
+                                                    <th>Net Usage</th>
+                                                    <th>Duration</th>
+                                                    <th>결재금액</th>
+
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </div>
+                                    <a class="btn btn-primary next" href="#">상세조회</a>
+                                </div>
+
+                                <!---------------------step3------------------->
+
+                                <div class="tab-pane fade" id="step3">
+                                    <div class="well">
+                                        <h2>Step 3</h2>제목을 입력하세요.<hr>
+                                        <div class="widget-content tab-content">
+                                            <div id="tab1" class="tab-pane active">
+                                                <div class="controls">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a class="btn btn-primary next" href="#">Continue</a>
+                                </div>
+
+                                <!---------------------step4------------------->
+
+                                <div class="tab-pane fade" id="step4">
+                                    <div class="well">
+                                        <h2>Step 4</h2>제목을 입력하세요.<hr>
+                                        <div class="widget-content tab-content">
+                                            <div id="tab1" class="tab-pane active">
+                                                <div class="controls">
+                                                    <
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a id="last_continue" class="btn btn-primary next" href="#">Continue</a>
+                                </div>
+
+                                <!---------------------step1------------------->
+
+                                <div class="tab-pane fade" id="step5">
+                                    <div class="well">
+                                        <h2>Step 5</h2>제목을 입력하세요.<hr>
+                                        <div class="widget-content tab-content">
+                                            <div id="tab1" class="tab-pane active">
+                                                <div class="controls">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a id="create_heat" class="btn btn-success first" href="#">Create VM</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="widget-box">
+                        <div class="widget-title"> <span class="icon"> <i class="icon-magic"></i> </span>
+                            <h5>내 인스턴스 목록</h5>
+                        </div>
+                        <div class="widget-content">
+                            <div class="tab-content">
+                                <table id="compute_table"  class="table table-bordered table-striped with-check">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>인스턴스 이름</th>
+                                        <th>Flavor</th>
+                                        <th>전원상태</th>
+                                        <th>생성 후 경과시간</th>
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="span5">
+                    <div class="widget-box">
+                        <div class="widget-title"> <span class="icon"> <i class="icon-list"></i> </span>
+                            <h5>과금기준</h5>
+                        </div>
+                        <div class="widget-content">
+                            <div class="controls">
+                                <div class="widget-box collapsible">
+                                    <div class="widget-title"> <a href="#collapseOne" data-toggle="collapse"> <span class="icon"><i class="icon-tags"></i></span>
+                                        <h5>Flavor 과금 기준(CPU당: 5원/시간, Memory 1GB당 : 19원/시간)</h5>
+                                    </a> </div>
+                                    <div class="collapse in" id="collapseOne">
+                                        <div class="widget-content">
+                                            <table id="flavor_table" class="table table-bordered table-striped with-check">
+                                                <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Name</th>
+                                                    <th>vCPUs</th>
+                                                    <th>RAM</th>
+                                                    <th>가격</th>
+                                                </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="widget-title"> <a href="#collapseTwo" data-toggle="collapse"> <span class="icon"><i class="icon-sitemap"></i></span>
+                                        <h5>Network 과금 기준</h5>
+                                    </a> </div>
+                                    <div class="collapse" id="collapseTwo">
+                                        <div class="widget-content">
+                                            <h5>전송량 누적 : 100원/GB</h5>
+                                        </div>
+                                    </div>
+                                    <div class="widget-title"> <a href="#collapseThree" data-toggle="collapse"> <span class="icon"><i class="icon-hdd"></i></span>
+                                        <h5>Storage 과금 기준</h5>
+                                    </a> </div>
+                                    <div class="collapse" id="collapseThree">
+                                        <div class="widget-content">
+                                            <h5>용량(10GB당) : 1.4원/시간</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--End-breadcrumbs-->
+            </div>
+
+        </div>
+    </div>
+
+{% endblock content %}
+
+{% block script %}
+    <script src={% static "js/bootstrap-datepicker.js" %}></script>
+
+    <script>
+        var meter_data;
+
+        $("#home_tap").removeClass("active");
+        $("#metering_tap").addClass("active");
+
+        $.get("/openstack/rest/servers", function(data) {
+            for (var i = 0; i < data.servers.length; i++) {
+                $('#compute_table').append(
+                    "<tr>" +
+                    "<td>" + Number(i+1) + "</td>" +
+                    "<td>" + data.servers[i].name + "</td>" +
+                    "<td>" + data.servers[i].flavor + "</td>" +
+                    "<td>" + data.servers[i].power + "</td>" +
+                    "<td>" + data.servers[i].created + "</td>" +
+                    "</tr>"
+                )
+            }
+        });
+
+        $.get("/openstack/rest/flavors/detail", function(data){
+            for (var i=0; i < data.flavors.length; i++) {
+                $('#flavor_table').append(
+                    "<tr>" +
+                    "<td>" + Number(i+1) + "</td>" +
+                    "<td>"+data.flavors[i].name+"</td>" +
+                    "<td>"+data.flavors[i].vcpus+"</td>" +
+                    "<td>"+data.flavors[i].ram/1024+" GB"+ "</td>" +
+                    "<td>"+(data.flavors[i].vcpus*5+ data.flavors[i].ram/1024*19) + "원/시간" +"</td>" +
+                    "</tr>"
+                );
+
+            }
+        });
+
+        $('.datepicker. input').each(function() {
+            $(this).datepicker();
+        });
+
+        function get_date_start () {
+            var date_start = $('#date_start').val();
+            date_start= date_start.concat("T00:00:00");
+            return date_start
+        }
+
+        function get_date_end () {
+            var date_end = $('#date_end').val();
+            date_end= date_end.concat("T23:59:59");
+            return date_end
+        }
+
+
+        $('.next').click(function(){
+            var nextId = $(this).parents('.tab-pane').next().attr("id");
+            $('[href=#'+nextId+']').tab('show');
+            return false;
+        });
+
+
+        $("#date_input").click(function () {
+            var date_end = $('#date_end').val();
+            date_end = new Date(date_end);
+            var today = new Date((new Date()).setHours(9, 0, 0, 0));
+            if (today <= date_end) {
+                alert("오늘 이전의 날짜를 선택해 주세요");
+                location.reload();
+            }
+            else {
+                var csrftoken = '{{ csrf_token}}';
+                $.ajaxSetup({
+                    beforeSend: function (xhr, settings) {
+                        if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken)
+                        }
+                    }
+                });
+
+
+                $('#metering_table').find('tbody').remove();
+                $('#meter_duration').text(get_date_start().substring(0, 10) + '부터 ' + get_date_end().substring(0, 10) + '까지 사용한 자원에 대한 과금을 확인해 보세요.');
+
+                var data = {'start': get_date_start(), 'end': get_date_end()};
+                $.post("/openstack/rest/v2/meters/", data, function (result) {
+                    meter_data = result;
+                    for (var i = 0; i < meter_data.meters.length; i++) {
+                        var net_usage = 0;
+                        for (var j = 0; j < meter_data.meters[i].network_interfaces.length; j++) {
+                            net_usage += Number(meter_data.meters[i].network_interfaces[j].tx)
+                        }
+                        var duration = meter_data.meters[i].duration_days*24 + meter_data.meters[i].duration_hours
+                        $('#metering_table').append(
+                            "<tr>" +
+                            "<td><input type='checkbox' name='metering_check' value='" + meter_data.instance_name + "' /></td>" +
+                            "<td>" + meter_data.meters[i].instance_name + "</td>" +
+                            "<td>" + meter_data.meters[i].flavor_name + "</td>" +
+                            "<td>" + meter_data.meters[i].vcpus + "</td>" +
+                            "<td>" + meter_data.meters[i].ram + "GB" + "</td>" +
+                            "<td>" + net_usage.toFixed(2) + "GB" + "</td>" +
+                            "<td>" + meter_data.meters[i].duration_days + "일" +
+                            meter_data.meters[i].duration_hours + "시간" + "</td>" +
+                            "<td>" + (meter_data.meters[i].vcpus * 5 * duration+
+                            meter_data.meters[i].ram * 19 * duration +
+                            (net_usage) * 100).toFixed(0) + "원" + "</td>" +
+                            "</tr>"
+                        )
+                    }
+                });
+            }
+        });
+
+    </script>
+{% endblock %}

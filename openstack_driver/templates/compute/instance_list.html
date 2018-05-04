@@ -1,0 +1,94 @@
+{% extends "base.html" %}ㅑ
+{% load staticfiles %}
+
+{% block content %}
+    <!--main-container-part-->
+    <div id="content">
+        <!--breadcrumbs-->
+        <div id="content-header">
+            <div id="breadcrumb">
+                <a href="{% url "home" %}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a>
+                <a href="#"> Compute</a>
+                <a href="{% url "openstack:instances" %}" class="current">instances</a></div>
+            <h1>Instance list</h1>
+            <!--이곳에 내용을 입력하세요-->
+        </div>
+        <div class="container-fluid">
+            <hr>
+            <div class="widget-box">
+                <div class="widget-title"> <span class="icon"> <i class="icon-th"></i> </span>
+                    <h5>생성된 인스턴스의 상태를 확인해 보세요</h5>
+                </div>
+                <div class="widget-content">
+                    <div class="btn-group pull-right" style="margin-bottom: 10px;">
+                        <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle">Action <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">인스턴스 재시작</a></li>
+                            <li><a href="#">인스턴스 시작</a></li>
+                            <li><a href="#">인스턴스 종료</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">인스턴스 삭제</a></li>
+                        </ul>
+                    </div>
+
+                    <table id="compute_table"  class="table table-bordered table-striped with-check"
+                        <thead>
+                        <tr>
+                            <th><i class="icon-check"></i></th>
+                            <th>인스턴스 이름</th>
+                            <th>이미지 이름</th>
+                            <th>Flavor</th>
+                            <th>Status</th>
+                            <th>전원상태</th>
+                            <th>가용구역</th>
+                            <th>생성 후 경과시간</th>
+                            <th style="width: 50px">작업</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+    <script>
+        $("#home_tap").removeClass("active");
+        $("#compute_tap").addClass("active open");
+        $("#instances_tap").addClass("active open");
+
+        var now = new Date();
+
+        $.get("/openstack/rest/servers", function(data) {
+            for (var i = 0; i < data.servers.length; i++) {
+                $('#compute_table').append(
+                    "<tr>" +
+                    "<td><input type='checkbox' name='server_radio' value='"+data.servers[i].name+"' /></td>" +
+                    "<td>" + data.servers[i].name + "</td>" +
+                    "<td>" + data.servers[i].image + "</td>" +
+                    "<td>" + data.servers[i].flavor + "</td>" +
+                    "<td>" + data.servers[i].status + "</td>" +
+                    "<td>" + data.servers[i].power + "</td>" +
+                    "<td>" + data.servers[i].zone + "</td>" +
+                    "<td>" + data.servers[i].created + "</td>" +
+                    "<td style='text-align: center'>" + '<div class="btn-group"><button class="btn btn-mini">스냅샷</button>' +
+                    '<button data-toggle="dropdown" class="btn dropdown-toggle btn-mini"><span class="caret"></span></button>' +
+                    '<ul class="dropdown-menu" style="text-align: left">' +
+                    '<li><a href="#">Floating IP 연결</a></li>' +
+                    '<li><a href="#">Floating IP 해제</a></li>' +
+                    '<li><a href="#">인스턴스 재시작</a></li>' +
+                    '<li><a href="#">인스턴스 시작</a></li>' +
+                    '<li><a href="#">인스턴스 종료</a></li>' +
+                    '<li class="divider"></li>' +
+                    '<li><a href="#">인스턴스 삭제</a></li>' +
+                    '</ul></div>' + "</td>" +
+                    "</tr>"
+                )
+            }
+        });
+    </script>
+{% endblock %}

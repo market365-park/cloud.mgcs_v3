@@ -1,0 +1,62 @@
+{% extends "base.html" %}ㅑ
+{% load staticfiles %}
+
+{% block content %}
+    <!--main-container-part-->
+    <div id="content">
+        <!--breadcrumbs-->
+        <div id="content-header">
+            <div id="breadcrumb">
+                <a href="{% url "home" %}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a>
+                <a href="#"> Network</a>
+                <a href="{% url "openstack:router" %}" class="current">Router</a></div>
+            <h1>Router</h1>
+            <!--이곳에 내용을 입력하세요-->
+        </div>
+        <div class="container-fluid">
+            <hr>
+            <div class="widget-box">
+                <div class="widget-title"> <span class="icon"> <i class="icon-road"></i> </span>
+                    <h5>라우터를 확인해 보세요.</h5>
+                </div>
+                <div class="widget-content">
+
+                    <div class="controls">
+                        <div class="btn-group pull-right" style="margin-bottom: 10px;">
+                            <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle">Action <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">인스턴스 재시작</a></li>
+                                <li><a href="#">인스턴스 시작</a></li>
+                                <li><a href="#">인스턴스 종료</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">인스턴스 삭제</a></li>
+                            </ul>
+                        </div>
+
+                        <table id="router_table" class="table table-bordered table-striped with-check">
+                            <thead>
+                            <tr>
+                                <th><i class="icon-sitemap"></i></th>
+                                <th>라우터 이름</th>
+                                <th>상태</th>
+                                <th>외부 네트워크</th>
+
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+    <script>
+        $("#home_tap").removeClass("active");
+        $("#network_tap").addClass("active open");
+        $("#router_tap").addClass("active open");
+    </script>
+{% endblock %}
